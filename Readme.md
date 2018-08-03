@@ -4,16 +4,10 @@ Run DIY Robocars model training as Sagemaker (https://aws.amazon.com/fr/sagemake
 
 # Build images
 
-- Build base image:
-
-``` 
-docker build -t robocars-base:1.4.1-gpu-py3 -f Dockerfile_base.gpu .
-```
-
 - Build model image:
 
 ``` 
-docker build -t robocars:1.4.1-gpu-py3 -f Dockerfile.gpu .
+docker build -t robocars:1.8.0-gpu-py3 -f Dockerfile.gpu .
 ```
 
 # Prepare training (once)
@@ -22,9 +16,9 @@ docker build -t robocars:1.4.1-gpu-py3 -f Dockerfile.gpu .
 - Create an AWS docker registry and push your model image to it. Docker hub registry is not supported
 
 ``` 
-docker tag robocars:1.4.1-gpu-py <replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.4.1-gpu-py3
+docker tag robocars:1.8.0-gpu-py <replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.8.0-gpu-py3
 # you should have AWS SDK installed and login to docker
-docker push <replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.4.1-gpu-py3
+docker push <replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.8.0-gpu-py3
 ``` 
 
 # Run training
@@ -47,7 +41,7 @@ echo 'Creating training job '$1
 aws sagemaker create-training-job \
     --training-job-name $job_name \
     --hyper-parameters '{ "sagemaker_region": "\"eu-west-1\"", "with_slide": "true" }' \
-    --algorithm-specification TrainingImage="<replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.4.1-gpu-py3",TrainingInputMode=File \
+    --algorithm-specification TrainingImage="<replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.8.0-gpu-py3",TrainingInputMode=File \
     --role-arn "<your_iam_sagemaker_role>" \
     --input-data-config '[{ "ChannelName": "train", "DataSource": { "S3DataSource": { "S3DataType": "S3Prefix", "S3Uri": "s3://<your_input_bucket>", "S3DataDistributionType": "FullyReplicated" }} }]' \
     --output-data-config S3OutputPath=s3://<your_output_bucket> \

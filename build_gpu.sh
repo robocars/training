@@ -1,1 +1,1 @@
-docker build -t tensorflow:1.4.1-gpu-py3 -f Dockerfile.gpu .
+docker build -t tensorflow:1.8.0-gpu-py3 -f Dockerfile.gpu .

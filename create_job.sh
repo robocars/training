@@ -8,7 +8,7 @@ then
 fi 
 echo 'Creating training job '$1
 
-training_image="<replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.4.1-gpu-py3"
+training_image="<replace_me>.dkr.ecr.eu-west-1.amazonaws.com/robocars:1.8.0-gpu-py3"
 iam_role_arn="arn:aws:iam::<replace_me>:role/service-role/<replace_me>"
 
 aws sagemaker create-training-job \
