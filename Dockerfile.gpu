@@ -1,0 +1,32 @@
+FROM python:3.5 as builder
+
+RUN mkdir -p /usr/src
+ADD . /usr/src
+WORKDIR /usr/src
+
+RUN python3 setup.py sdist
+
+FROM tensorflow-base:1.4.1-gpu-py3
+
+WORKDIR /root
+
+RUN apt-get -y update && \
+    apt-get -y install curl && \
+    apt-get -y install vim && \
+    apt-get -y install iputils-ping && \
+    apt-get -y install nginx
+
+# install telegraf
+RUN cd /tmp && \
+    curl -O https://dl.influxdata.com/telegraf/releases/telegraf_1.4.2-1_amd64.deb && \
+    dpkg -i telegraf_1.4.2-1_amd64.deb && \
+    cd -
+
+COPY --from=builder /usr/src/dist/robocars_sagemaker_container-1.0.0.tar.gz .
+
+RUN pip3 install robocars_sagemaker_container-1.0.0.tar.gz
+
+RUN rm robocars_sagemaker_container-1.0.0.tar.gz
+
+ENTRYPOINT ["entry.py"]
+
